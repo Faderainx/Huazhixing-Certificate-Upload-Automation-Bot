@@ -1,0 +1,33 @@
+# Python cache and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Local credentials and configuration
+config.json
+credentials.enc
+*.env
+*.local.*
+
+# Task packages, customer data, generated results, and logs
+results/
+output/
+logs/
+storage/
+*.xlsx
+*.zip
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.docx
+*.exe
+*.log
+
+# Build/editor files
+build/
+dist/
+.idea/
+.vscode/

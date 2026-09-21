@@ -1,0 +1,169 @@
+{
+  "level1": {
+    "page": "待办列表（左侧=待办列表，右侧服务方框=待办列表）",
+    "controls": [
+      {
+        "name": "搜索框",
+        "kind": "search",
+        "action": "输入公司中文名",
+        "bind": "公司中文名(注册表映射)",
+        "selector": null,
+        "api": null
+      },
+      {
+        "name": "上传ID和截图",
+        "kind": "button",
+        "action": "点击",
+        "bind": null,
+        "selector": null,
+        "api": "待确认：是否有等价 API"
+      },
+      {
+        "name": "文件输入(点击这里)",
+        "kind": "file",
+        "action": "上传截图",
+        "bind": "截图文件",
+        "selector": null,
+        "api": null
+      },
+      {
+        "name": "ID 输入框",
+        "kind": "input",
+        "action": "填当天日期",
+        "bind": "当天日期",
+        "selector": null,
+        "api": null
+      },
+      {
+        "name": "确认",
+        "kind": "button",
+        "action": "提交",
+        "bind": null,
+        "selector": null,
+        "api": "待确认"
+      }
+    ]
+  },
+  "level2": {
+    "page": "二级待办列表（右侧服务方框=二级待办列表）",
+    "controls": [
+      {
+        "name": "搜索框",
+        "kind": "search",
+        "action": "输入公司中文名",
+        "bind": "明细表.公司中文名",
+        "selector": null,
+        "api": null
+      },
+      {
+        "name": "搜索",
+        "kind": "button",
+        "action": "点击",
+        "bind": null,
+        "selector": null,
+        "api": null
+      },
+      {
+        "name": "上传证书",
+        "kind": "button",
+        "action": "点击(按 goodsName 选条目)",
+        "bind": "明细表.商品名/类别",
+        "selector": null,
+        "api": "POST /appservice/hyz/Servicecertificate/uploadCert"
+      },
+      {
+        "name": "文件输入(点击这里)",
+        "kind": "file",
+        "action": "上传证书",
+        "bind": "证书文件(公司名+RV)",
+        "selector": null,
+        "api": null
+      },
+      {
+        "name": "证书编号",
+        "kind": "input",
+        "action": "填号",
+        "bind": "明细表.WEEE号",
+        "selector": null,
+        "api": null
+      },
+      {
+        "name": "确定 / 提交",
+        "kind": "button",
+        "action": "提交",
+        "bind": null,
+        "selector": null,
+        "api": null
+      }
+    ]
+  },
+  "data_bindings": {
+    "一级代办": {
+      "截图文件名 → 编号": "正则截取前缀编号(如 HX2304)",
+      "编号 → 公司中文名": "查注册表(截图zip内 Sheet=注册表)",
+      "公司中文名 → 搜索框": "系统待办列表",
+      "截图文件 → 文件输入": "上传",
+      "当天日期 → ID输入框": "格式 2026/7/24"
+    },
+    "二级代办": {
+      "明细表.公司中文名 → 搜索框": "二级待办列表",
+      "明细表.商品名 → goodsName匹配": "德国WEEE注册 / 德国电池法BattG",
+      "证书文件(公司名+RV) → 文件输入": "上传",
+      "明细表.WEEE号 → 证书编号框": "回填"
+    }
+  },
+  "coverage": {
+    "FR-1 独立运行": {
+      "status": "covered",
+      "note": "纯命令行脚本，可独立运行"
+    },
+    "FR-2 原样读表": {
+      "status": "missing",
+      "note": "硬编码列(商品名/上传反馈)，样例缺列会抛 ValueError"
+    },
+    "FR-3 一级代办": {
+      "status": "missing",
+      "note": "完全未实现"
+    },
+    "FR-4 二级逐行": {
+      "status": "covered",
+      "note": "按公司分组 N行→N次"
+    },
+    "FR-5 类别匹配": {
+      "status": "partial",
+      "note": "仅 goodsName 匹配，无 WEEE/BAT 条目级校验"
+    },
+    "FR-6 证书号填写": {
+      "status": "covered",
+      "note": "从 Excel 取号"
+    },
+    "FR-7 进度与日志": {
+      "status": "partial",
+      "note": "仅 stdout 日志，无失败文件"
+    },
+    "FR-8 断点重跑": {
+      "status": "partial",
+      "note": "仅手动 --pre-done，无持久化状态"
+    },
+    "FR-9 结果汇总": {
+      "status": "partial",
+      "note": "仅打印 dict"
+    },
+    "GUI 外壳": {
+      "status": "missing",
+      "note": "仅命令行"
+    },
+    "凭证本地加密": {
+      "status": "missing",
+      "note": "明文默认/环境变量"
+    }
+  },
+  "confirmed": {
+    "W3E/W3C→WEEE? BAT名称?": "即 WEEE(文件名 WEEE-华之星)；BAT=电池法(文件名 BAT-华之星)，系统商品名=德国电池法BattG",
+    "截图映射键": "编号(B列)，非域名",
+    "表列名/Sheet": "明细表 WEEE-华之星.xlsx(无商品名/上传反馈列)；一级表在截图包内 注册表 Sheet",
+    "证书格式/命名": "PDF；WEEE/BAT-华之星-编号-公司名-RV编号.pdf",
+    "登录/上传控件": "后台有登录/二级待办/上传证书 API(已验证)；一级代办 API 待确认",
+    "国别": "需求文档写法国=误；真实为德国 WEEE注册/德国电池法BattG"
+  }
+}
